@@ -71,5 +71,9 @@ Route::middleware('admin')->group(function () {
     Route::delete('/memberlist/{user}', [MemberListController::class, 'destroy'])->name('memberlist.destroy');
     Route::post('store-score', [\App\Http\Controllers\ScoreController::class, 'store'])->name('score-store');
     Route::get('/device-information', [\App\Http\Controllers\DeviceInformationController::class, 'index'])->name('device-information');
+    Route::post('/sessions/add-user', [\App\Http\Controllers\SessionController::class, 'addUserToSession'])->name('sessions.add_user');
+    Route::put('/sessions/{session}/update-pitchers', [\App\Http\Controllers\SessionController::class, 'updatePitchers'])
+    ->name('sessions.update_pitchers');
+
 });
 

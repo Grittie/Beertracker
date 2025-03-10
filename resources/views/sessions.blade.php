@@ -7,8 +7,6 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-
-            <!-- Date Selector with Calendar Icon -->
             <div class="mb-4">
                 <label for="session-date" class="block text-sm font-medium text-gray-700 mb-1">
                     Select Session Date:
@@ -28,35 +26,32 @@
 
             <script>
                 document.addEventListener("DOMContentLoaded", function () {
-                    const highlightDates = @json($highlightDates); // Pass data to JavaScript
-
-                    // Initialize Flatpickr
                     flatpickr("#session-date", {
                         dateFormat: "Y-m-d",
-                        defaultDate: "{{ request('session_date') ?? now()->toDateString() }}", // Default to today's date if no session_date is selected
-                        enable: highlightDates, // Enable only the highlighted dates
+                        defaultDate: "{{ request('session_date') ?? now()->toDateString() }}",
+                        enable: @json($highlightDates),
                         onChange: function(selectedDates, dateStr) {
-                            // Redirect when a date is selected
                             window.location.href = '?session_date=' + dateStr;
                         }
                     });
                 });
             </script>
 
+            @if (Auth::user()->administrator)
+            <div class="mb-6">
+                <form action="{{ route('sessions.add_user') }}" method="POST" class="flex items-center space-x-2">
+                    @csrf
+                    <label for="user-select" class="text-sm font-medium text-gray-700">Add User to Today's Session:</label>
+                    <select name="user_id" id="user-select" class="border rounded-md p-2">
+                        @foreach($users as $user)
+                            <option value="{{ $user->id }}">{{ $user->name }}</option>
+                        @endforeach
+                    </select>
+                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Confirm</button>
+                </form>
+            </div>
+            @endif
 
-            @forelse ($sessionDetails as $key => $detail)
-                @if ($key === 0)
-                    <div class="mt-4 text-sm text-gray-500">
-                        Session started: {{ $detail->check_in_time }}
-                    </div>
-                    @break
-                @endif
-            @empty
-                <div class="mt-4 text-sm text-gray-500">
-                </div>
-            @endforelse
-
-            <!-- Table for Session Details -->
             <div class="overflow-x-auto bg-white rounded-lg shadow">
                 <table class="table-auto w-full border-collapse bg-white">
                     <thead>
@@ -66,6 +61,9 @@
                             <th class="py-4 px-6 font-semibold text-gray-700 border-b text-left w-2/12">Arrival</th>
                             <th class="py-4 px-6 font-semibold text-gray-700 border-b text-left w-2/12">Pitchers</th>
                             <th class="py-4 px-6 font-semibold text-gray-700 border-b text-left w-2/12">€ Spent</th>
+                            @if (Auth::user()->administrator)
+                                <th class="py-4 px-6 font-semibold text-gray-700 border-b text-left w-2/12">Actions</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -76,6 +74,16 @@
                                 <td class="py-4 px-6 text-gray-700 border-b text-left">{{ $detail->check_in_time }}</td>
                                 <td class="py-4 px-6 text-gray-700 border-b text-left">{{ $detail->pitchers }}</td>
                                 <td class="py-4 px-6 text-gray-700 border-b text-left">€ {{ $detail->pitchers * 14 }}</td>
+                                @if (Auth::user()->administrator)
+                                    <td class="py-4 px-6 text-gray-700 border-b text-left">
+                                        <form action="{{ route('sessions.update_pitchers', ['session' => $detail->session_id]) }}" method="POST" class="inline-block">
+                                            @csrf
+                                            @method('PUT')
+                                            <button type="submit" name="action" value="increment" class="bg-green-500 text-white px-2 py-1 rounded">+</button>
+                                            <button type="submit" name="action" value="decrement" class="bg-red-500 text-white px-2 py-1 rounded">-</button>
+                                        </form>
+                                    </td>
+                                @endif
                             </tr>
                         @empty
                             <tr>
@@ -85,7 +93,6 @@
                     </tbody>
                 </table>
             </div>
-
         </div>
     </div>
 </x-app-layout>

@@ -6,6 +6,7 @@ use App\Models\DrinkSession;
 use Illuminate\Http\Request;
 use App\Models\Card;
 use App\Models\User;
+use Carbon\Carbon;
 
 class SessionController extends Controller
 {
@@ -15,23 +16,64 @@ class SessionController extends Controller
             ->distinct()
             ->orderByDesc('session_date')
             ->pluck('session_date');
-
+    
         // Use today's date if no session_date is provided
         $selectedDate = $request->get('session_date') ?? now()->toDateString();
-
+    
         // Fetch session details for the selected date
         $sessionDetails = DrinkSession::with('user') // Load related user data
             ->where('session_date', $selectedDate)
             ->orderBy('check_in_time')
             ->get();
-
+    
+        // Fetch all users for the dropdown
+        $users = User::all();
+    
         // Format session dates as an array for easy use in JavaScript
         $highlightDates = $sessionDates->map(function ($date) {
             return $date->format('Y-m-d');
         });
-
-        return view('sessions', compact('highlightDates', 'sessionDetails', 'selectedDate'));
+    
+        return view('sessions', compact('highlightDates', 'sessionDetails', 'selectedDate', 'users'));
     }
+    
+
+    public function addUserToSession(Request $request)
+    {
+        $userId = $request->input('user_id');
+        $today = Carbon::now()->toDateString();
+        
+        // Check if a session for this user already exists today
+        $session = DrinkSession::where('session_date', $today)
+            ->where('user_id', $userId)
+            ->first();
+
+        if (!$session) {
+            // Create a new session if one doesn't exist
+            $session = DrinkSession::create([
+                'user_id' => $userId, // Ensure user_id is provided
+                'session_date' => $today,
+                'check_in_time' => now()->toTimeString(),
+                'pitchers' => 0,
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'User added to today\'s session!');
+    }
+
+    public function updatePitchers(Request $request, DrinkSession $session)
+{
+    $action = $request->input('action');
+
+    if ($action === 'increment') {
+        $session->increment('pitchers');
+    } elseif ($action === 'decrement' && $session->pitchers > 0) {
+        $session->decrement('pitchers');
+    }
+
+    return redirect()->back()->with('success', 'Pitchers updated successfully.');
+}
+
 
 
     public function handleCard(Request $request)
