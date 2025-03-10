@@ -4,7 +4,7 @@
             {{ __('About BeerTracker & To-Do') }}
         </h2>
         <p class="mt-4 text-gray-500 text-sm leading-relaxed">
-            Version: 1.0.0
+            Version: 1.0.2
         </p>
         <p class="mt-4 text-gray-500 text-sm leading-relaxed">
             Created and maintained by Lars Grit. For feature requests or issues, contact me on your favorite messaging app.
