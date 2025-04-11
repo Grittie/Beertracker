@@ -16,7 +16,11 @@
     <meta property="og:url" content="https://beertracker.nl/">
     <meta property="og:title" content="Beertracker">
     <meta property="og:description" content="Track who owes beers the smart way.">
-    <meta property="og:image" content="https://beertracker.nl/images/preview.png"> <!-- optional preview image -->
+    <meta property="og:image" content="https://beertracker.nl/images/preview_banner.png"> <!-- optional preview image -->
+
+    <!-- Discord-specific Open Graph Tags -->
+    <meta property="og:site_name" content="Beertracker">
+    <meta property="og:locale" content="en_US"> <!-- Adjust locale if needed -->
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
