@@ -8,7 +8,7 @@
     <title>{{ config('app.name', 'Beertracker') }}</title>
 
     <!-- Primary Meta Tags -->
-    <meta name="title" content="Beertracker">
+    <meta name="title" content="Beertracker | Easy Beer Cost Tracking with Friends">
     <meta name="description" content="Beertracker is your go-to site for tracking the amount of beer everyone is pitching in for – no tikkies, no stress.">
 
     <!-- Open Graph / Facebook -->
