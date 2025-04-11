@@ -16,14 +16,14 @@
     <meta property="og:url" content="https://beertracker.nl/">
     <meta property="og:title" content="Beertracker">
     <meta property="og:description" content="Track who owes beers the smart way.">
-    <meta property="og:image" content="https://beertracker.nl/preview.png"> <!-- optional preview image -->
+    <meta property="og:image" content="https://beertracker.nl/images/preview.png"> <!-- optional preview image -->
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://beertracker.nl/">
     <meta property="twitter:title" content="Beertracker">
     <meta property="twitter:description" content="Track who owes beers the smart way.">
-    <meta property="twitter:image" content="https://beertracker.nl/preview.png"> <!-- optional preview image -->
+    <meta property="twitter:image" content="https://beertracker.nl/images/preview.png"> <!-- optional preview image -->
 
     <!-- Site Name (for Google) -->
     <meta property="og:site_name" content="Beertracker">
