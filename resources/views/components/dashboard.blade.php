@@ -92,8 +92,8 @@
                     ->join('users', 'drink_sessions.user_id', '=', 'users.id')
                     ->select('users.name', DB::raw('COUNT(drink_sessions.session_id) as session_count'), DB::raw('SUM(drink_sessions.pitchers) as total_pitchers'))
                     ->groupBy('users.id', 'users.name')
-                    ->orderBy('session_count', 'desc')
-                    ->orderBy('total_pitchers', 'asc')
+                    ->havingRaw('SUM(drink_sessions.pitchers) <= ?', [1]) // Filter for users with minimal pitchers
+                    ->orderBy('session_count', 'desc') // Most sessions attended
                     ->first();
             @endphp
 
@@ -118,13 +118,13 @@
                 ->join('users', 'drink_sessions.user_id', '=', 'users.id')
                 ->select('users.name', DB::raw('COUNT(drink_sessions.session_id) as session_count'), DB::raw('SUM(drink_sessions.pitchers) as total_pitchers'))
                 ->groupBy('users.id', 'users.name')
-                ->orderBy('session_count', 'asc') // Least sessions first
-                ->orderBy('total_pitchers', 'desc') // Most pitchers within that group
+                ->havingRaw('COUNT(drink_sessions.session_id) > ?', [5]) // Filter for users with some activity
+                ->orderByRaw('SUM(drink_sessions.pitchers) / COUNT(drink_sessions.session_id) DESC') // Most pitchers per session
                 ->first();
         @endphp
 
         @if ($leastActiveMostPitchers)
-            {{ $leastActiveMostPitchers->name }} has attended {{ $leastActiveMostPitchers->session_count }} sessions but managed to pitch in for {{ $leastActiveMostPitchers->total_pitchers }} pitchers! Thanks :)
+            {{ $leastActiveMostPitchers->name }} has attended {{ $leastActiveMostPitchers->session_count }} sessions and pitched in for {{ $leastActiveMostPitchers->total_pitchers }} pitchers, averaging the most pitchers per session! 🍻
         @else
             No data available yet.
         @endif
