@@ -27,6 +27,7 @@ class Score extends Model
     {
         $totalPitchers = DB::table('scores')->sum('pitchers')
             + DB::table('scoresy1')->sum('pitchers')
+            + DB::table('scoresy3')->sum('pitchers')
             + DB::table('scoresy2')->sum('pitchers');
         return $totalPitchers;
     }

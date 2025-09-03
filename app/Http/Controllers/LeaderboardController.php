@@ -21,6 +21,10 @@ class LeaderboardController extends Controller
                 ->leftJoin('scoresy2', 'users.id', '=', 'scoresy2.user_id')
                 ->orderByDesc('scoresy2.pitchers')
                 ->get(),
+            'year3' => User::select('users.*', 'scoresy3.pitchers')
+                ->leftJoin('scoresy3', 'users.id', '=', 'scoresy3.user_id')
+                ->orderByDesc('scoresy3.pitchers')
+                ->get(),
             default => User::select('users.*', 'scores.pitchers')
                 ->leftJoin('scores', 'users.id', '=', 'scores.user_id')
                 ->orderByDesc('scores.pitchers')

@@ -56,7 +56,7 @@
         </div>
         <p class="mt-4 text-gray-500 text-sm leading-relaxed">
             @php
-                $topUsers = collect([
+                $allUsers = collect([
                     DB::table('scores')->join('users', 'scores.user_id', '=', 'users.id')
                         ->select('users.name', DB::raw('SUM(scores.pitchers) as total_pitchers'))
                         ->groupBy('users.id', 'users.name')
@@ -69,13 +69,24 @@
                         ->select('users.name', DB::raw('SUM(scoresy2.pitchers) as total_pitchers'))
                         ->groupBy('users.id', 'users.name')
                         ->get(),
+                    DB::table('scoresy3')->join('users', 'scoresy3.user_id', '=', 'users.id')
+                        ->select('users.name', DB::raw('SUM(scoresy3.pitchers) as total_pitchers'))
+                        ->groupBy('users.id', 'users.name')
+                        ->get(),
                 ])->flatten()->groupBy('name')
-                  ->map(fn ($group) => $group->sum('total_pitchers'))
-                  ->sortDesc()->take(3);
+                  ->map(fn ($group) => $group->sum('total_pitchers'));
+
+                $topUsers = $allUsers->sortDesc()->take(3);
+                $lowestUser = $allUsers->filter(fn($pitchers) => $pitchers > 0)
+                    ->sort()
+                    ->take(1);
             @endphp
 
             @foreach ($topUsers as $name => $totalPitchers)
                 {{ $loop->iteration }}. {{ $name }}: {{ $totalPitchers }} pitchers <br>
+            @endforeach
+            @foreach ($lowestUser as $name => $totalPitchers)
+                4. {{ $name }}: {{ $totalPitchers }} pitchers <span style="font-weight:bold;font-style:italic;">lowest</span> <br>
             @endforeach
         </p>
     </div>
