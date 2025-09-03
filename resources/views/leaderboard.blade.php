@@ -22,6 +22,10 @@
                    class="{{ $tab === 'year2' ? 'font-bold text-blue-700 border-b-2 border-blue-500' : '' }} px-4 py-2 text-gray-700">
                     Year 2
                 </a>
+                <a href="{{ route('leaderboard', ['tab' => 'year3']) }}" 
+                   class="{{ $tab === 'year3' ? 'font-bold text-blue-700 border-b-2 border-blue-500' : '' }} px-4 py-2 text-gray-700">
+                    Year 3
+                </a>
             </div>
 
             <!-- Leaderboard Table -->
@@ -34,6 +38,8 @@
                         @include('leaderboard.year1')
                     @elseif ($tab === 'year2')
                         @include('leaderboard.year2')
+                    @elseif ($tab === 'year3')
+                        @include('leaderboard.year3')
                     @endif
                 </div>
             </div>
