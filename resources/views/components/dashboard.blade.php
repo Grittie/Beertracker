@@ -86,7 +86,11 @@
                 {{ $loop->iteration }}. {{ $name }}: {{ $totalPitchers }} pitchers <br>
             @endforeach
             @foreach ($lowestUser as $name => $totalPitchers)
-                4. {{ $name }}: {{ $totalPitchers }} pitchers <span style="font-weight:bold;font-style:italic;">lowest</span> <br>
+                @php
+                    // Find the actual rank of the lowest user in the sorted list
+                    $rank = $allUsers->sortDesc()->keys()->search($name) + 1;
+                @endphp
+                {{ $rank }}. {{ $name }}: {{ $totalPitchers }} pitchers <span style="font-weight:bold;font-style:italic;">lowest</span> <br>
             @endforeach
         </p>
     </div>
